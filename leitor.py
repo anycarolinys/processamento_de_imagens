@@ -1,4 +1,7 @@
 
+import statistics
+import math
+
 def leitor_PBM(arquivo):
     with open(arquivo,'r') as arquivo:
         # linhas = arquivo.readlines()
@@ -55,6 +58,18 @@ def parse_pbm_string(pbm_string):
 
     return bitmap
 
+def obter_vizinhanca(linha, coluna, m):
+    if (linha+1 < len(m) and linha-1 >= 0):
+        vizinhos = [ m[linha-1][coluna], m[linha+1][coluna],
+                m[linha][coluna-1], m[linha][coluna+1],
+                m[linha-1][coluna+1], m[linha+1][coluna+1],
+                m[linha-1][coluna-1], m[linha+1][coluna-1]]
+        vizinhos.sort()
+        return vizinhos
+    return None
+
+def mediana(lista):
+    return int(math.floor(statistics.median(lista)))
 
 def salvar_PBM(nome_arquivo, formato, largura, altura, pixels):
     """ with open(nome_arquivo, 'w') as arquivo:
@@ -95,7 +110,11 @@ if __name__ == "__main__":
     arquivo = './dilatacao_pbm.pbm'
     imagem = leitor_PBM(arquivo)
     array = parse_pbm_string(imagem)
-    print(len(array))
+    viz = obter_vizinhanca(2,2,array)
+    print(viz)
+    m = mediana(viz)
+    print(m)
+"""     print(len(array))
     print(len(array[0]))
     print(array)
-    print(len(array[7]))
+    print(len(array[7])) """
