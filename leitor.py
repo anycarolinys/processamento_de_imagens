@@ -1,4 +1,4 @@
-import netpbmfile
+
 def leitor_PBM(arquivo):
     with open(arquivo,'r') as arquivo:
         # linhas = arquivo.readlines()
@@ -17,34 +17,37 @@ def leitor_PBM(arquivo):
 
 def parse_pbm_string(pbm_string):
     lines = pbm_string.split('\n')
+    lines = [line for line in lines if not line.startswith('#')]
     width, height = map(int, lines[1].split())
-    print(width,height)
+    # print(width,height)
 
     bitmap = []
     leftover_chars = []
 
     i = 2
     while len(bitmap) < height and i < len(lines):
-        if not lines[i].startswith('#'):  # Ignora linhas que começam com '#'
-            # print('Remaining',leftover_chars)
+        # Ignora linhas que começam com '#'
+        if not lines[i].startswith('#'):  
             row = [int(pixel) for pixel in lines[i].strip()]
-            if i == 2:
-                print(len(row))
             row = leftover_chars+row
             leftover_chars = []
-            # print('Row 1', row)
 
             # Preenche a linha com caracteres da próxima linha se for mais curta que a largura
-            if len(row) < width:
-                remaining_chars = width - len(row)
-                next_line_chars = [int(pixel) for pixel in lines[i + 1].strip()[: remaining_chars]]
-                lines[i+1] = lines[i+1][remaining_chars:]
+            # Enquanto o tamanho da linha for menor do que a largura
+            while len(row) < width:
+                next_line_chars = [int(pixel) for pixel in lines[i + 1].strip()]
+                remaining_next = width-len(row)
+                # print('remaining',{remaining_next})
                 row.extend(next_line_chars)
-                # print('Row 2',row)
-
-            elif len(row) > width:
+                if len(row) > width:
+                    lines[i+1] = lines[i+1][remaining_next:]
+                    row = row[:width]
+                # print('While row', row)
+                # print('While row[i+1]', lines[i+1])
+            if len(row) > width:
                 leftover_chars = [int(pixel) for pixel in lines[i].strip()[width:]]
                 row = row[:width]
+                # print('if', row)
                 
 
             bitmap.append(row)
@@ -85,17 +88,14 @@ def dilatacao_com_elemento_estruturante(imagem, elemento_estruturante):
     return nova_imagem
 
 if __name__ == "__main__":
-    # arquivo = './dilatacao_pbm.pbm'
-    arquivo = './lorem_s12_c02_espacos_noise.pbm'
+    # arquivo = './imagens/lorem_s12_c02_espacos_noise.pbm'
+    # arquivo = './imagens/lorem_s12_c02_espacos.pbm'
+    # arquivo = './imagens/lorem_s12_c02_just_noise.pbm'
+    # arquivo = './imagens/lorem_s12_c02_just.pbm'
+    arquivo = './dilatacao_pbm.pbm'
     imagem = leitor_PBM(arquivo)
     array = parse_pbm_string(imagem)
     print(len(array))
-    # print(imagem[0])
-    # print(imagem[1])
-    # print(imagem[2])
-    # print(imagem[3])
-    # elemento_estruturante = [[0, 1, 0], [1, 1, 1], [0, 1, 0]]
-    # elemento_estruturante = [[0, 0, 0], [0, 1, 1], [0, 0, 0]]
-    # imagem_dilatada = dilatacao_com_elemento_estruturante(imagem,elemento_estruturante)
-
-    
+    print(len(array[0]))
+    print(array)
+    print(len(array[7]))
