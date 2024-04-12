@@ -1,5 +1,6 @@
 import numpy as np
 import statistics
+import time
 
 def leitor_PBM(arquivo):
     with open(arquivo,'r') as arquivo:
@@ -77,12 +78,106 @@ def salvar_PBM(nome_arquivo, formato, largura, altura, pixels):
                 arquivo.write(f'{pixels[i][j]}')
             arquivo.write('\n')
 
+def dilatacao(imagem, kernel):
+    altura, largura = imagem.shape
+    altura_kernel, largura_kernel = kernel.shape
+    imagem_dilatada = np.zeros((altura, largura), dtype=np.uint8)
+    pad_h = altura_kernel // 2
+    pad_w = largura_kernel // 2
+
+    for i in range(pad_h, altura - pad_h):
+        for j in range(pad_w, largura - pad_w):
+            if np.sum(imagem[i-pad_h:i+pad_h+1, j-pad_w:j+pad_w+1] * kernel) > 0:
+                # imagem_dilatada[i, j] = 255
+                imagem_dilatada[i, j] = 1
+
+    return imagem_dilatada
+
+def erosao(imagem, kernel):
+    altura, largura = imagem.shape
+    altura_kernel, largura_kernel = kernel.shape
+    imagem_erodida = np.zeros((altura, largura), dtype=np.uint8)
+    pad_h = altura_kernel // 2
+    pad_w = largura_kernel // 2
+
+    for i in range(pad_h, altura - pad_h):
+        for j in range(pad_w, largura - pad_w):
+            # if np.min(imagem[i-pad_h:i+pad_h+1, j-pad_w:j+pad_w+1] * kernel) == 255:
+            if np.min(imagem[i-pad_h:i+pad_h+1, j-pad_w:j+pad_w+1] * kernel) == 1:
+                # imagem_erodida[i, j] = 255
+                imagem_erodida[i, j] = 1
+
+    return imagem_erodida
+
+def contar_caractere(string, caractere):
+    return string.count(caractere)
+
 if __name__ == "__main__":
-    arquivo = './imagens/lorem_s12_c02_just_noise.pbm'
+
+
+    inicio = time.time()
+
+    # arquivo = './imagens/texto_grupo.pbm'
     imagem_str = leitor_PBM(arquivo)
     largura, altura, vetor_bidimensional = parse_string_array(imagem_str)
 
     matriz = filtro_mediana(largura, altura, vetor_bidimensional)
-
     formato = 'P1'
-    salvar_PBM('./lorem_s12_c02_just_noise_sem_ruido.pbm', formato, largura, altura, matriz)
+    salvar_PBM('./texto_grupo_sem_ruido.pbm', formato, largura, altura, matriz)
+
+    print('Ruido removido')
+    sem_ruido = './texto_grupo_sem_ruido.pbm'
+    sem_ruido_str = leitor_PBM(sem_ruido)
+    largura, altura, vetor_bidimensional = parse_string_array(sem_ruido_str)
+    vetor_np = np.array(vetor_bidimensional, dtype=np.uint8)
+
+    elemento_estruturante_dilatacao = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1]], dtype=np.uint8)
+    # elemento_estruturante_dilatacao = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1, 1],[0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=np.uint8)
+    dilatacao0 = dilatacao(vetor_np, elemento_estruturante_dilatacao)
+    print('Dilatacao 1')
+    dilatacao1 = dilatacao(dilatacao0, elemento_estruturante_dilatacao)
+    print('Dilatacao 2')
+    dilatacao2 = dilatacao(dilatacao1, elemento_estruturante_dilatacao)
+    print('Dilatacao 3')
+    dilatacao3 = dilatacao(dilatacao2, elemento_estruturante_dilatacao)
+    print('Dilatacao 4')
+    dilatacao4 = dilatacao(dilatacao3, elemento_estruturante_dilatacao)
+    print('Dilatacao 5')
+    dilatacao5 = dilatacao(dilatacao4, elemento_estruturante_dilatacao)
+    print('Dilatacao 6')
+    dilatacao6 = dilatacao(dilatacao5, elemento_estruturante_dilatacao)
+    print('Dilatacao 7')
+    dilatacao7 = dilatacao(dilatacao6, elemento_estruturante_dilatacao)
+    print('Dilatacao 8')
+    dilatacao8 = dilatacao(dilatacao7, elemento_estruturante_dilatacao)
+    print('Dilatacao 9')
+    dilatacao9 = dilatacao(dilatacao8, elemento_estruturante_dilatacao)
+    print('Dilatacao 10')
+    salvar_PBM('./texto_grupo_dilatada10.pbm', formato, largura, altura, dilatacao1)
+    """ dilatacao10 = dilatacao(dilatacao9, elemento_estruturante_dilatacao)
+    print('Dilatacao 10')
+    dilatacao11 = dilatacao(dilatacao10, elemento_estruturante_dilatacao)
+    print('Dilatacao 11') """
+
+
+    img = './lorem_s12_c02_just_noise_dilatada10.pbm'
+    img = './texto_grupo_dilatada10.pbm'
+    dilatacao4_str = leitor_PBM(img)
+    largura, altura, vetor_bidimensional = parse_string_array(dilatacao4_str)
+
+    print(len(vetor_bidimensional))
+    coluna_central = int((largura)/2)
+    # coluna_central = 130
+    
+    qtd_linhas_col_1 = 0
+    for i in range(altura-1):
+        if vetor_bidimensional[i][coluna_central] == 1 and vetor_bidimensional[i+1][coluna_central] == 0:
+            qtd_linhas_col_1 += 1
+
+    print(qtd_linhas_col_1-1)
+
+    fim = time.time()
+
+    # Calcula o tempo total decorrido
+    tempo_total = fim - inicio
+    print('Tempo de execucao'. tempo_total)
