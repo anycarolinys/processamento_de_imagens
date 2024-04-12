@@ -1,3 +1,4 @@
+import numpy as np
 import statistics
 
 def leitor_PBM(arquivo):
@@ -76,20 +77,12 @@ def salvar_PBM(nome_arquivo, formato, largura, altura, pixels):
                 arquivo.write(f'{pixels[i][j]}')
             arquivo.write('\n')
 
-
 if __name__ == "__main__":
-    # arquivo = './exemplo1.pbm'
     arquivo = './imagens/lorem_s12_c02_just_noise.pbm'
     imagem_str = leitor_PBM(arquivo)
     largura, altura, vetor_bidimensional = parse_string_array(imagem_str)
-    # print(largura,altura, vetor_bidimensional)
-    print(largura,altura)
-    print(len(vetor_bidimensional))
-    print(len(vetor_bidimensional[0]))
-    print(len(vetor_bidimensional[len(vetor_bidimensional)-1]))
 
     matriz = filtro_mediana(largura, altura, vetor_bidimensional)
 
     formato = 'P1'
-    salvar_PBM('./noise_gerada.pbm', formato, largura, altura, matriz)
-
+    salvar_PBM('./lorem_s12_c02_just_noise_sem_ruido.pbm', formato, largura, altura, matriz)

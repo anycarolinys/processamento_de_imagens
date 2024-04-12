@@ -39,7 +39,7 @@ def leitor_PBM(arquivo):
     return linhas
     # return formato, largura, altura, pixels
 
-def parse_pbm_string(pbm_string):
+""" def parse_pbm_string(pbm_string):
     lines = pbm_string.split('\n')
     lines = [line for line in lines if not line.startswith('#')]
     width, height = map(int, lines[1].split())
@@ -52,36 +52,39 @@ def parse_pbm_string(pbm_string):
     # i = 3
     while len(bitmap) < height and i < len(lines):
         # Ignora linhas que começam com '#'
-        if not lines[i].startswith('#'):  
-            row = [int(pixel) for pixel in lines[i].strip()]
-            # row = [int(pixel) for pixel in lines[i].split()]
-            row = leftover_chars+row
-            leftover_chars = []
+        # if not lines[i].startswith('#'):  
+        # row = [int(pixel) for pixel in lines[i].strip()]
+        # print('Row', row)
+        row = [int(pixel) for pixel in lines[i].split()]
+        row = leftover_chars+row
+        leftover_chars = []
 
-            # Preenche a linha com caracteres da próxima linha se for mais curta que a largura
-            # Enquanto o tamanho da linha for menor do que a largura
-            while len(row) < width:
-                next_line_chars = [int(pixel) for pixel in lines[i + 1].strip()]
-                # next_line_chars = [int(pixel) for pixel in lines[i + 1].split()]
-                remaining_next = width-len(row)
-                # print('remaining',{remaining_next})
-                row.extend(next_line_chars)
-                if len(row) > width:
-                    lines[i+1] = lines[i+1][remaining_next:]
-                    row = row[:width]
-                # print('While row', row)
-                # print('While row[i+1]', lines[i+1])
+        # Preenche a linha com caracteres da próxima linha se for mais curta que a largura
+        # Enquanto o tamanho da linha for menor do que a largura
+        while len(row) < width:
+            # next_line_chars = [int(pixel) for pixel in lines[i + 1].strip()]
+            next_line_chars = [int(pixel) for pixel in lines[i + 1].split()]
+            remaining_next = width-len(row)
+            # print('remaining',{remaining_next})
+            row.extend(next_line_chars)
             if len(row) > width:
-                leftover_chars = [int(pixel) for pixel in lines[i].strip()[width:]]
-                # leftover_chars = [int(pixel) for pixel in lines[i].split()[width:]]
+                lines[i+1] = lines[i+1][remaining_next:]
                 row = row[:width]
-                # print('if', row)
+            # print('While row', row)
+            # print('While row[i+1]', lines[i+1])
+        if len(row) > width:
+            # leftover_chars = [int(pixel) for pixel in lines[i].strip()[width:]]
+            leftover_chars = [int(pixel) for pixel in lines[i].split()[width:]]
+            row = row[:width]
+            # print('if', row)
                 
 
-            bitmap.append(row)
+        bitmap.append(row)
         i += 1
 
-    return width, height, bitmap
+    return width, height, bitmap """
+
+
 
 def obter_vizinhanca(linha, coluna, m):
     
@@ -148,28 +151,56 @@ def salvar_PBM(nome_arquivo, formato, largura, altura, pixels):
         """ for linha in dados_imagem:
             linha_formatada = " ".join(str(pixel) for pixel in linha)
             arquivo.write(linha_formatada + "\n") """
-        for i in range(altura):
+        # for i in range(altura):
+        for i in range(largura):
+            # for j in range(largura):
             for j in range(largura):
                 arquivo.write(f'{pixels[i][j]}')
                 # arquivo.write(f'{pixels[i][j]} ')
             arquivo.write('\n')
+
+def contar_caractere(arquivo, caractere):
+    with open(arquivo,'r') as arquivo:
+        # linhas = arquivo.readlines()
+        linhas = arquivo.read()
+    return linhas.count(caractere)
+
+# def criar_matriz():
+
 
 if __name__ == "__main__":
     # arquivo = './imagens/lorem_s12_c02_espacos_noise.pbm'
     # arquivo = './imagens/lorem_s12_c02_espacos.pbm'
     # arquivo = './imagens/lorem_s12_c02_just.pbm'
     # arquivo = './pgm/cameraman.pgm'
-    arquivo = './exemplo1.pbm'
-    # arquivo = './imagens/lorem_s12_c02_just_noise.pbm'
+    # arquivo = './exemplo2.pbm'
+    # print(type(imagem))
+    # print(imagem)
+    """ arquivo = './imagens/lorem_s12_c02_just_noise.pbm'
     imagem = leitor_PBM(arquivo)
-    largura, altura, matriz = parse_pbm_string(imagem)
+    largura, altura, matriz = parse_pbm_string(imagem) """
     
-    print(f'Matriz original', matriz)
-    valores = matriz_valores(largura, altura, matriz)
+    # print(f'Matriz original', matriz)
+    # valores = matriz_valores(largura, altura, matriz)
 
 
-    # formato = 'P1'
     # matriz = filtro_mediana(largura, altura, matriz)
     
     # print(f'Matriz com filtro', len(matriz[0]))
-    # salvar_PBM('./noise_mediana.pbm', formato, largura, altura, matriz)
+    
+    """ print(len(matriz[0]))
+    print(len(matriz))
+    formato = 'P1'
+    salvar_PBM('./imagem_gerada.pbm', formato, largura, altura, matriz) """
+
+    # Exemplo de uso:
+    zero = '0'
+    um = '1'
+    arquivo = './imagens/lorem_s12_c02_just_noise.pbm'
+    # 0s = 3434122
+    # 1s = 430594
+    # arquivo = './imagem_gerada.pbm'
+    # 0s = 114447123
+    # 1s = 4778824
+    # quantidade = contar_caractere(arquivo, caractere_especifico)
+    # print(f"A quantidade de '{caractere_especifico}' na string é: {quantidade}")
