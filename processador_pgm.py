@@ -117,7 +117,7 @@ if __name__ == "__main__":
 
     inicio = time.time()
 
-    # arquivo = './imagens/texto_grupo.pbm'
+    arquivo = './imagens/texto_grupo.pbm'
     imagem_str = leitor_PBM(arquivo)
     largura, altura, vetor_bidimensional = parse_string_array(imagem_str)
 
@@ -131,12 +131,12 @@ if __name__ == "__main__":
     largura, altura, vetor_bidimensional = parse_string_array(sem_ruido_str)
     vetor_np = np.array(vetor_bidimensional, dtype=np.uint8)
 
-    elemento_estruturante_dilatacao = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1]], dtype=np.uint8)
+    elemento_estruturante_dilatacao = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1, 1]], dtype=np.uint8)
     # elemento_estruturante_dilatacao = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1],[1, 1, 1, 1, 1, 1, 1, 1, 1],[0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=np.uint8)
     dilatacao0 = dilatacao(vetor_np, elemento_estruturante_dilatacao)
     print('Dilatacao 1')
     dilatacao1 = dilatacao(dilatacao0, elemento_estruturante_dilatacao)
-    print('Dilatacao 2')
+    """ print('Dilatacao 2')
     dilatacao2 = dilatacao(dilatacao1, elemento_estruturante_dilatacao)
     print('Dilatacao 3')
     dilatacao3 = dilatacao(dilatacao2, elemento_estruturante_dilatacao)
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     dilatacao8 = dilatacao(dilatacao7, elemento_estruturante_dilatacao)
     print('Dilatacao 9')
     dilatacao9 = dilatacao(dilatacao8, elemento_estruturante_dilatacao)
-    print('Dilatacao 10')
+    print('Dilatacao 10') """
     salvar_PBM('./texto_grupo_dilatada10.pbm', formato, largura, altura, dilatacao1)
     """ dilatacao10 = dilatacao(dilatacao9, elemento_estruturante_dilatacao)
     print('Dilatacao 10')
